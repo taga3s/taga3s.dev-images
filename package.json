@@ -1,0 +1,17 @@
+{
+	"name": "taga3s-dev-assets",
+	"scripts": {
+		"dev": "wrangler dev",
+		"deploy": "wrangler deploy --minify",
+		"lint": "bunx biome lint --write --unsafe ./src",
+		"format": "bunx biome format --write ./src package.json tsconfig.json"
+	},
+	"dependencies": {
+		"hono": "^4.7.4"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.9.4",
+		"@cloudflare/workers-types": "^4.20250214.0",
+		"wrangler": "^3.109.2"
+	}
+}
