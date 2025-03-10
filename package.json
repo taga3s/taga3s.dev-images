@@ -5,7 +5,7 @@
 		"dev": "wrangler dev",
 		"deploy": "wrangler deploy --minify",
 		"lint": "bunx biome lint --write --unsafe ./src",
-		"format": "bunx biome format --write ./src package.json tsconfig.json"
+		"format": "bunx biome format --write ./src ./assets package.json tsconfig.json"
 	},
 	"dependencies": {
 		"hono": "^4.7.4"
