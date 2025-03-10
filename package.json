@@ -1,5 +1,6 @@
 {
 	"name": "taga3s-dev-assets",
+	"type": "module",
 	"scripts": {
 		"dev": "wrangler dev",
 		"deploy": "wrangler deploy --minify",

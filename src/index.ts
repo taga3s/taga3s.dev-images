@@ -1,26 +1,23 @@
 import { Hono } from "hono";
+import work_experiences from "../assets/data/work_experiences.json";
+import works from "../assets/data/works.json";
 
-type Bindings = {
-	BUCKET: R2Bucket;
-};
+const v1 = new Hono();
+
+v1.get("/work-experiences", async (c) => {
+	return c.json({ work_experiences });
+});
+
+v1.get("/works", async (c) => {
+	return c.json({ works });
+});
+
+type Bindings = {};
 
 const app = new Hono<{
 	Bindings: Bindings;
 }>();
 
-app.get("/:id", async (c) => {
-	const object = await c.env.BUCKET.get(c.req.param("id"));
-	if (!object) {
-		return c.notFound();
-	}
-
-	
-	const body = await object.arrayBuffer();
-	const contentType = object.httpMetadata?.contentType ?? "image/jpeg";
-
-	return c.body(body, 200, {
-		"Content-Type": contentType,
-	});
-});
+app.route("/api/v1", v1);
 
 export default app;
