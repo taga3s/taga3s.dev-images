@@ -3,6 +3,10 @@
   "name": "taga3s-dev-assets",
   "main": "src/index.ts",
   "compatibility_date": "2025-02-24",
+  "vars": {
+    "BASIC_AUTH_USERNAME": "taga3s",
+    "BASIC_AUTH_PASSWORD": "mameshiba1123"
+  },
   "kv_namespaces": [
     {
       "binding": "KV_TAGA3S_DEV_ASSETS",

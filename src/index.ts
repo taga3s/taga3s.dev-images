@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { env } from "hono/adapter";
 import { basicAuth } from "hono/basic-auth";
 
 type Bindings = {
@@ -6,6 +7,8 @@ type Bindings = {
 };
 
 const v1 = new Hono<{ Bindings: Bindings }>();
+
+// Public routes
 
 v1.get("/work-history", async (c) => {
 	const value = await c.env.KV_TAGA3S_DEV_ASSETS.get("work_history");
@@ -18,19 +21,6 @@ v1.get("/work-history", async (c) => {
 	return c.json({ work_history });
 });
 
-v1.put(
-	"/work-history",
-	basicAuth({
-		username: "taga3s",
-		password: "mameshiba1123",
-	}),
-	async (c) => {
-		const { value } = await c.req.json();
-		await c.env.KV_TAGA3S_DEV_ASSETS.put("work_history", JSON.stringify(value));
-		return c.json({ message: "Work history updated" });
-	},
-);
-
 v1.get("/works", async (c) => {
 	const value = await c.env.KV_TAGA3S_DEV_ASSETS.get("works");
 	if (!value) {
@@ -42,18 +32,31 @@ v1.get("/works", async (c) => {
 	return c.json({ works });
 });
 
-v1.put(
-	"/works",
-	basicAuth({
-		username: "taga3s",
-		password: "mameshiba1123",
-	}),
-	async (c) => {
-		const { value } = await c.req.json();
-		await c.env.KV_TAGA3S_DEV_ASSETS.put("works", JSON.stringify(value));
-		return c.json({ message: "Works updated" });
-	},
-);
+// Admin routes
+
+v1.use('/admin/*', async (c, next) => {
+	const { BASIC_AUTH_USERNAME, BASIC_AUTH_PASSWORD } = env<{
+		BASIC_AUTH_USERNAME: string;
+		BASIC_AUTH_PASSWORD: string;
+	}>(c);
+	const middleware = basicAuth({
+		username: BASIC_AUTH_USERNAME,
+		password: BASIC_AUTH_PASSWORD,
+	});
+	return middleware(c, next);
+});
+
+v1.put("/admin/work-history", async (c) => {
+	const { value } = await c.req.json();
+	await c.env.KV_TAGA3S_DEV_ASSETS.put("work_history", JSON.stringify(value));
+	return c.json({ message: "Work history updated" });
+});
+
+v1.put("/admin/works", async (c) => {
+	const { value } = await c.req.json();
+	await c.env.KV_TAGA3S_DEV_ASSETS.put("works", JSON.stringify(value));
+	return c.json({ message: "Works updated" });
+});
 
 const app = new Hono();
 
