@@ -1,5 +1,4 @@
 import { Hono } from "hono";
-import works from "../assets/data/works.json";
 import { basicAuth } from "hono/basic-auth";
 
 type Bindings = {
@@ -33,8 +32,28 @@ v1.put(
 );
 
 v1.get("/works", async (c) => {
+	const value = await c.env.KV_TAGA3S_DEV_ASSETS.get("works");
+	if (!value) {
+		return c.json({ works: [] });
+	}
+
+	const works = JSON.parse(value);
+
 	return c.json({ works });
 });
+
+v1.put(
+	"/works",
+	basicAuth({
+		username: "taga3s",
+		password: "mameshiba1123",
+	}),
+	async (c) => {
+		const { value } = await c.req.json();
+		await c.env.KV_TAGA3S_DEV_ASSETS.put("works", JSON.stringify(value));
+		return c.json({ message: "Works updated" });
+	},
+);
 
 const app = new Hono();
 
