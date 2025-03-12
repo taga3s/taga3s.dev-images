@@ -1,11 +1,11 @@
 import { Hono } from "hono";
-import work_experiences from "../assets/data/work_experiences.json";
+import work_history from "../assets/data/work_history.json";
 import works from "../assets/data/works.json";
 
 const v1 = new Hono();
 
-v1.get("/work-experiences", async (c) => {
-	return c.json({ work_experiences });
+v1.get("/work-history", async (c) => {
+	return c.json({ work_history });
 });
 
 v1.get("/works", async (c) => {
