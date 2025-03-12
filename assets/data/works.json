@@ -10,7 +10,7 @@
 	{
 		"id": "ysk91w-_u5",
 		"title": "Rhythmate",
-		"description": "習慣化をゲーム感覚で楽しみながら、身につけることができる Web アプリケーション。",
+		"description": "習慣化をゲーム感覚で楽しみながら、身につけることができる Web アプリ",
 		"techStack": "React, TS, Node.js, Gemini API",
 		"githubUrl": "https://github.com/taga3s/Rhythmate-Web",
 		"order": 2

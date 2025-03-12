@@ -3,7 +3,7 @@
 		"id": "n8ixm1oulmq",
 		"span": "2023年3月 - 12月",
 		"company": "独立系SIer（インターン）",
-		"description": "複数の社内向けWebアプリケーションの開発に従事。デザインシステムを利用したプロダクトのUI構築や改善、フロントからバックエンドまで一気通貫した開発等、幅広く取り組んだ。",
+		"description": "複数の社内向けWebアプリの開発に従事。デザインシステムを利用したプロダクトのUI構築や改善、フロントエンドからバックエンドまで一気通貫した開発等、幅広く取り組んだ。",
 		"techStack": "Next.js, TypeScript, Nest.js, Prisma, GraphQL, gRPC",
 		"order": 1
 	},
