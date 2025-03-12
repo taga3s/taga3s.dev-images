@@ -2,13 +2,16 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "taga3s-dev-assets",
   "main": "src/index.ts",
-  "compatibility_date": "2025-03-09"
+  "compatibility_date": "2025-02-24",
+  "kv_namespaces": [
+    {
+      "binding": "KV_TAGA3S_DEV_ASSETS",
+      "id": "35477d8719904f77b0c5b6acd8e6d375"
+    }
+  ]
   // "compatibility_flags": [
   //   "nodejs_compat"
   // ],
-  // "vars": {
-  //   "MY_VAR": "my-variable"
-  // },
   // "r2_buckets": [
   //   {
   //     "binding": "TAGA3S_DEV_ASSETS_BUCKET",
