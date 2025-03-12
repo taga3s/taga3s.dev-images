@@ -3,7 +3,7 @@ import { env } from "hono/adapter";
 import { basicAuth } from "hono/basic-auth";
 
 type Bindings = {
-	KV_TAGA3S_DEV_ASSETS: KVNamespace;
+	kv_taga3s_dev_assets: KVNamespace;
 };
 
 const v1 = new Hono<{ Bindings: Bindings }>();
@@ -11,7 +11,7 @@ const v1 = new Hono<{ Bindings: Bindings }>();
 // Public routes
 
 v1.get("/work-history", async (c) => {
-	const value = await c.env.KV_TAGA3S_DEV_ASSETS.get("work_history");
+	const value = await c.env.kv_taga3s_dev_assets.get("work_history");
 	if (!value) {
 		return c.json({ work_history: [] });
 	}
@@ -22,7 +22,7 @@ v1.get("/work-history", async (c) => {
 });
 
 v1.get("/works", async (c) => {
-	const value = await c.env.KV_TAGA3S_DEV_ASSETS.get("works");
+	const value = await c.env.kv_taga3s_dev_assets.get("works");
 	if (!value) {
 		return c.json({ works: [] });
 	}
@@ -34,7 +34,7 @@ v1.get("/works", async (c) => {
 
 // Admin routes
 
-v1.use('/admin/*', async (c, next) => {
+v1.use("/admin/*", async (c, next) => {
 	const { BASIC_AUTH_USERNAME, BASIC_AUTH_PASSWORD } = env<{
 		BASIC_AUTH_USERNAME: string;
 		BASIC_AUTH_PASSWORD: string;
@@ -48,13 +48,13 @@ v1.use('/admin/*', async (c, next) => {
 
 v1.put("/admin/work-history", async (c) => {
 	const { value } = await c.req.json();
-	await c.env.KV_TAGA3S_DEV_ASSETS.put("work_history", JSON.stringify(value));
+	await c.env.kv_taga3s_dev_assets.put("work_history", JSON.stringify(value));
 	return c.json({ message: "Work history updated" });
 });
 
 v1.put("/admin/works", async (c) => {
 	const { value } = await c.req.json();
-	await c.env.KV_TAGA3S_DEV_ASSETS.put("works", JSON.stringify(value));
+	await c.env.kv_taga3s_dev_assets.put("works", JSON.stringify(value));
 	return c.json({ message: "Works updated" });
 });
 

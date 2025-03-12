@@ -9,8 +9,8 @@
   },
   "kv_namespaces": [
     {
-      "binding": "KV_TAGA3S_DEV_ASSETS",
-      "id": "35477d8719904f77b0c5b6acd8e6d375"
+      "binding": "kv_taga3s_dev_assets",
+      "id": "c1f118627c554223bcbce2a2257506ff"
     }
   ]
   // "compatibility_flags": [
