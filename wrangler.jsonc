@@ -5,7 +5,8 @@
   "compatibility_date": "2025-02-24",
   "vars": {
     "BASIC_AUTH_USERNAME": "taga3s",
-    "BASIC_AUTH_PASSWORD": "mameshiba1123"
+    "BASIC_AUTH_PASSWORD": "mameshiba1123",
+    "PROD_SERVICE_URL": "https://taga3s-dev-assets.taga3s.workers.dev"
   },
   "r2_buckets": [
     {

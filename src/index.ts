@@ -44,6 +44,31 @@ v1.get("/works", async (c) => {
 	});
 });
 
+v1.get("/images/favorites/:key", async (c) => {
+	const object = await c.env.r2_taga3s_dev_assets.get(
+		`images/favorites/${c.req.param("key")}`,
+	);
+	if (!object) {
+		return c.notFound();
+	}
+
+	const body = await object.arrayBuffer();
+	return c.body(body, 200, {
+		"Content-Type": object.httpMetadata?.contentType ?? "image/jpeg",
+	});
+});
+
+v1.get("/images/favorites", async (c) => {
+	const { PROD_SERVICE_URL } = env<{ PROD_SERVICE_URL: string }>(c);
+	const data = await c.env.r2_taga3s_dev_assets.list({
+		prefix: "images/favorites/",
+	});
+	const images = data.objects.map((object) => ({
+		uri: `${PROD_SERVICE_URL}/api/v1/${object.key}`,
+	}));
+	return c.json({ images });
+});
+
 // Admin routes
 
 v1.use("/admin/*", async (c, next) => {
@@ -74,6 +99,20 @@ v1.put("/admin/works", async (c) => {
 		JSON.stringify({ works }),
 	);
 	return c.json({ message: "Works updated", path: object?.key });
+});
+
+v1.put("/admin/images/favorites", async (c) => {
+	const { file, name } = await c.req.parseBody<{ file: File; name: string }>();
+	const result = await c.env.r2_taga3s_dev_assets.put(
+		`images/favorites/${name}`,
+		file,
+		{
+			httpMetadata: {
+				contentType: file.type,
+			},
+		},
+	);
+	return c.json(result);
 });
 
 const app = new Hono();
