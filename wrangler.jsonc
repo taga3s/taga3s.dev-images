@@ -7,19 +7,13 @@
     "BASIC_AUTH_USERNAME": "taga3s",
     "BASIC_AUTH_PASSWORD": "mameshiba1123"
   },
-  "kv_namespaces": [
+  "r2_buckets": [
     {
-      "binding": "kv_taga3s_dev_assets",
-      "id": "c1f118627c554223bcbce2a2257506ff"
+      "bucket_name": "r2-taga3s-dev-assets",
+      "binding": "r2_taga3s_dev_assets"
     }
   ]
   // "compatibility_flags": [
   //   "nodejs_compat"
   // ],
-  // "r2_buckets": [
-  //   {
-  //     "binding": "TAGA3S_DEV_ASSETS_BUCKET",
-  //     "bucket_name": "taga3s-dev-assets"
-  //   }
-  // ]
 }
