@@ -10,6 +10,29 @@ const v1 = new Hono<{ Bindings: Bindings }>();
 
 // Public routes
 
+// Cache /images/* for 30 minutes
+v1.get("/images/*", async (c, next) => {
+	const cacheKey = c.req.url;
+
+	const cache = caches.default;
+
+	const cachedResponse = await cache.match(cacheKey);
+	if (cachedResponse) {
+		return cachedResponse;
+	}
+
+	await next();
+
+	if (!c.res.ok) {
+		return;
+	}
+
+	c.header("Cache-Control", "s-maxage=1800");
+
+	const res = c.res.clone();
+	c.executionCtx.waitUntil(cache.put(cacheKey, res));
+});
+
 v1.get("/images/favs", async (c) => {
 	return c.json({ images: [] });
 });
@@ -44,6 +67,17 @@ v1.get("/works", async (c) => {
 	});
 });
 
+v1.get("/photos/favs", async (c) => {
+	const { PROD_SERVICE_URL } = env<{ PROD_SERVICE_URL: string }>(c);
+	const data = await c.env.r2_taga3s_dev_assets.list({
+		prefix: "images/favorites/",
+	});
+	const images = data.objects.map((object) => ({
+		uri: `${PROD_SERVICE_URL}/api/v1/${object.key}`,
+	}));
+	return c.json({ images });
+});
+
 v1.get("/images/favorites/:key", async (c) => {
 	const object = await c.env.r2_taga3s_dev_assets.get(
 		`images/favorites/${c.req.param("key")}`,
@@ -56,17 +90,6 @@ v1.get("/images/favorites/:key", async (c) => {
 	return c.body(body, 200, {
 		"Content-Type": object.httpMetadata?.contentType ?? "image/jpeg",
 	});
-});
-
-v1.get("/images/favorites", async (c) => {
-	const { PROD_SERVICE_URL } = env<{ PROD_SERVICE_URL: string }>(c);
-	const data = await c.env.r2_taga3s_dev_assets.list({
-		prefix: "images/favorites/",
-	});
-	const images = data.objects.map((object) => ({
-		uri: `${PROD_SERVICE_URL}/api/v1/${object.key}`,
-	}));
-	return c.json({ images });
 });
 
 // Admin routes
