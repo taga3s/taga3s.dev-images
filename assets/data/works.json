@@ -4,24 +4,24 @@
 			"id": "i6b7y-fpfv",
 			"title": "ascii-art-gen",
 			"description": "好きな画像からアスキーアートを出力することができるCLIツール",
-			"techStack": "Go",
-			"githubUrl": "https://github.com/taga3s/ascii-art-gen",
+			"tech_stack": "Go",
+			"github_url": "https://github.com/taga3s/ascii-art-gen",
 			"order": 1
 		},
 		{
 			"id": "ysk91w-_u5",
 			"title": "Rhythmate",
 			"description": "習慣化をゲーム感覚で楽しみながら、身につけることができる Web アプリ",
-			"techStack": "React, TS, Node.js, Gemini API",
-			"githubUrl": "https://github.com/taga3s/Rhythmate-Web",
+			"tech_stack": "React, TS, Node.js, Gemini API",
+			"github_url": "https://github.com/taga3s/Rhythmate-Web",
 			"order": 2
 		},
 		{
 			"id": "6axq01y00",
 			"title": "pecopeco",
 			"description": "簡単に飲食店の検索や LINE への通知を行える、すこし Geek な CLI アプリ",
-			"techStack": "Go, Hotpepper API, LINE Notify API",
-			"githubUrl": "https://github.com/taga3s/pecopeco",
+			"tech_stack": "Go, Hotpepper API, LINE Notify API",
+			"github_url": "https://github.com/taga3s/pecopeco",
 			"order": 3
 		}
 	]
