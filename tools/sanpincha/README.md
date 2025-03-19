@@ -6,5 +6,5 @@
 
 - Get data from the server
 ```bash
-$ sanpincha get --target (-t) <target>
+$ sanpincha get <target_path>
 ```
