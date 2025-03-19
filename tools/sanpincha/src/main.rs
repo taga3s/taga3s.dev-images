@@ -8,7 +8,7 @@ struct Cli {
     command: String,
 
     #[arg(short, long, default_value_t = String::from(""))]
-    target: String,
+    path: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -26,9 +26,19 @@ struct Works {
     works: Vec<Work>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+struct FavPhoto {
+    uri: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct FavPhotos {
+    images: Vec<FavPhoto>,
+}
+
 async fn get_data<T: for<'de> Deserialize<'de>>(path: String) -> T {
     let base_url = std::env::var("BASE_URL").expect("BASE_URL is not set");
-    let request_url = format!("{}/{}", base_url, path);
+    let request_url = format!("{}{}", base_url, path);
 
     let client = reqwest::Client::new();
     let response = client
@@ -73,9 +83,9 @@ async fn main() {
     let cli = Cli::parse();
 
     match cli.command.as_str() {
-        "get" => match cli.target.as_str() {
-            "works" => {
-                let data = get_data::<Works>("works".to_string()).await;
+        "get" => match cli.path.as_str() {
+            "/works" => {
+                let data = get_data::<Works>(cli.path).await;
 
                 for work in data.works {
                     println!("-------------------------");
@@ -86,8 +96,8 @@ async fn main() {
                     println!("order: {:?}", work.order);
                 }
             }
-            "work-history" => {
-                let data = get_data::<WorkHistory>("work-history".to_string()).await;
+            "/work-history" => {
+                let data = get_data::<WorkHistory>(cli.path).await;
                 for wh in data.work_history {
                     println!("-------------------------");
                     println!("span: {:?}", wh.span);
@@ -97,8 +107,15 @@ async fn main() {
                     println!("order: {:?}", wh.order);
                 }
             }
+            "/photos/favs" => {
+                let data = get_data::<FavPhotos>(cli.path).await;
+                for photo in data.images {
+                    println!("-------------------------");
+                    println!("uri: {:?}", photo.uri);
+                }
+            }
             _ => {
-                println!("Invalid target");
+                println!("Invalid path");
             }
         },
         _ => {
