@@ -2,6 +2,9 @@ name: check-codebase
 
 on:
   push:
+    paths-ignore:
+      - tools/**
+      - README.md
 
 jobs:
   check-codebase:
