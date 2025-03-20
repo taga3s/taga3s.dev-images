@@ -1065,11 +1065,13 @@ checksum = "28d3b2b1366ec20994f1fd18c3c594f05c5dd4bc44d8bb0c1c632c8d6829481f"
 name = "sanpincha"
 version = "0.1.0"
 dependencies = [
+ "base64",
  "clap",
  "dotenv",
  "futures",
  "reqwest",
  "serde",
+ "serde_json",
  "tokio",
  "tokio-macros",
 ]
