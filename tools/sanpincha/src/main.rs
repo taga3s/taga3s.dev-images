@@ -57,9 +57,9 @@ struct PutJsonDataResponse {
 }
 
 async fn get_data<T: for<'de> Deserialize<'de>>(path: String) -> T {
-    let base_url = std::env::var("BASE_URL").expect("BASE_URL is not set");
+    let config = utils::get_config();
 
-    let request_url = format!("{}{}", base_url, path);
+    let request_url = format!("{}{}", config.base_url, path);
     let client = reqwest::Client::new();
 
     let response = client
@@ -83,14 +83,15 @@ async fn get_data<T: for<'de> Deserialize<'de>>(path: String) -> T {
 }
 
 async fn put_json_data<T: Serialize>(path: String, req_body: &T) -> PutJsonDataResponse {
-    let username = std::env::var("BASIC_AUTH_USERNAME").expect("BASIC_AUTH_USERNAME is not set");
-    let password = std::env::var("BASIC_AUTH_PASSWORD").expect("BASIC_AUTH_PASSWORD is not set");
-    let base_url = std::env::var("BASE_URL").expect("BASE_URL is not set");
+    let config = utils::get_config();
 
-    let request_url = format!("{}{}", base_url, path);
+    let request_url = format!("{}{}", config.base_url, path);
     let auth_header = format!(
         "Basic {}",
-        utils::encode_base64(&format!("{}:{}", username, password))
+        utils::encode_base64(&format!(
+            "{}:{}",
+            config.basic_auth_username, config.basic_auth_password
+        ))
     );
     let client = reqwest::Client::new();
 
@@ -128,14 +129,15 @@ struct PutFileDataResponse {
 }
 
 async fn put_file_data(path: String, file_data: FileData) -> PutFileDataResponse {
-    let username = std::env::var("BASIC_AUTH_USERNAME").expect("BASIC_AUTH_USERNAME is not set");
-    let password = std::env::var("BASIC_AUTH_PASSWORD").expect("BASIC_AUTH_PASSWORD is not set");
-    let base_url = std::env::var("BASE_URL").expect("BASE_URL is not set");
+    let config = utils::get_config();
 
-    let request_url = format!("{}{}", base_url, path);
+    let request_url = format!("{}{}", config.base_url, path);
     let auth_header = format!(
         "Basic {}",
-        utils::encode_base64(&format!("{}:{}", username, password))
+        utils::encode_base64(&format!(
+            "{}:{}",
+            config.basic_auth_username, config.basic_auth_password
+        ))
     );
     let client = reqwest::Client::new();
 
@@ -173,13 +175,15 @@ struct Cli {
 
 #[derive(Debug, Subcommand)]
 enum Commands {
+    /// Equivalent to GET request
     Get {
         path: String,
     },
+    /// Equivalent to PUT request
     Put {
         path: String,
 
-        #[clap(short = 'f', long)]
+        #[clap(short = 'f', long = "file", help = "File path")]
         file: Option<String>,
     },
 }
