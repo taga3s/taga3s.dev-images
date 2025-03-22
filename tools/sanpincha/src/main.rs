@@ -53,9 +53,10 @@ struct PutResponse {
 
 async fn get_data<T: for<'de> Deserialize<'de>>(path: String) -> T {
     let base_url = std::env::var("BASE_URL").expect("BASE_URL is not set");
-    let request_url = format!("{}{}", base_url, path);
 
+    let request_url = format!("{}{}", base_url, path);
     let client = reqwest::Client::new();
+
     let response = client
         .get(&request_url)
         .header(USER_AGENT, "sanpincha")
@@ -79,22 +80,20 @@ async fn get_data<T: for<'de> Deserialize<'de>>(path: String) -> T {
 async fn put_data<T: Serialize>(path: String, req_body: &T) -> PutResponse {
     let username = std::env::var("BASIC_AUTH_USERNAME").expect("BASIC_AUTH_USERNAME is not set");
     let password = std::env::var("BASIC_AUTH_PASSWORD").expect("BASIC_AUTH_PASSWORD is not set");
-
     let base_url = std::env::var("BASE_URL").expect("BASE_URL is not set");
-    let request_url = format!("{}{}", base_url, path);
 
+    let request_url = format!("{}{}", base_url, path);
+    let auth_header = format!(
+        "Basic {}",
+        utils::encode_base64(&format!("{}:{}", username, password))
+    );
     let client = reqwest::Client::new();
+
     let response = client
         .put(&request_url)
         .header(USER_AGENT, "sanpincha")
         .header(ACCEPT, "application/json")
-        .header(
-            AUTHORIZATION,
-            format!(
-                "Basic {}",
-                utils::encode_base64(&format!("{}:{}", username, password))
-            ),
-        )
+        .header(AUTHORIZATION, &auth_header)
         .json(req_body)
         .send()
         .await;
