@@ -1,8 +1,13 @@
 mod utils;
 
+use std::fs;
+
 use clap::{Parser, Subcommand};
 use dotenv::dotenv;
-use reqwest::header::{ACCEPT, AUTHORIZATION, USER_AGENT};
+use reqwest::{
+    header::{ACCEPT, AUTHORIZATION, USER_AGENT},
+    multipart,
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -46,7 +51,7 @@ struct WorkHistory {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct PutResponse {
+struct PutJsonDataResponse {
     message: String,
     path: String,
 }
@@ -77,7 +82,7 @@ async fn get_data<T: for<'de> Deserialize<'de>>(path: String) -> T {
     res_data
 }
 
-async fn put_data<T: Serialize>(path: String, req_body: &T) -> PutResponse {
+async fn put_json_data<T: Serialize>(path: String, req_body: &T) -> PutJsonDataResponse {
     let username = std::env::var("BASIC_AUTH_USERNAME").expect("BASIC_AUTH_USERNAME is not set");
     let password = std::env::var("BASIC_AUTH_PASSWORD").expect("BASIC_AUTH_PASSWORD is not set");
     let base_url = std::env::var("BASE_URL").expect("BASE_URL is not set");
@@ -104,7 +109,56 @@ async fn put_data<T: Serialize>(path: String, req_body: &T) -> PutResponse {
     };
 
     let res_data = response
-        .json::<PutResponse>()
+        .json::<PutJsonDataResponse>()
+        .await
+        .expect("Something went wrong while parsing");
+
+    res_data
+}
+
+struct FileData {
+    name: String,
+    content: Vec<u8>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct PutFileDataResponse {
+    uploaded: String,
+    key: String,
+}
+
+async fn put_file_data(path: String, file_data: FileData) -> PutFileDataResponse {
+    let username = std::env::var("BASIC_AUTH_USERNAME").expect("BASIC_AUTH_USERNAME is not set");
+    let password = std::env::var("BASIC_AUTH_PASSWORD").expect("BASIC_AUTH_PASSWORD is not set");
+    let base_url = std::env::var("BASE_URL").expect("BASE_URL is not set");
+
+    let request_url = format!("{}{}", base_url, path);
+    let auth_header = format!(
+        "Basic {}",
+        utils::encode_base64(&format!("{}:{}", username, password))
+    );
+    let client = reqwest::Client::new();
+
+    let part = multipart::Part::bytes(file_data.content).file_name(file_data.name.clone());
+    let form = reqwest::multipart::Form::new()
+        .text("name", file_data.name)
+        .part("file", part);
+
+    let response = client
+        .put(&request_url)
+        .header(USER_AGENT, "sanpincha")
+        .header(AUTHORIZATION, &auth_header)
+        .multipart(form)
+        .send()
+        .await;
+
+    let response = match response {
+        Ok(res) if res.status().is_success() => res,
+        _ => panic!("Request failed"),
+    };
+
+    let res_data = response
+        .json::<PutFileDataResponse>()
         .await
         .expect("Something went wrong while parsing");
 
@@ -113,14 +167,21 @@ async fn put_data<T: Serialize>(path: String, req_body: &T) -> PutResponse {
 
 #[derive(Parser, Debug)]
 struct Cli {
-    #[command(subcommand)]
+    #[clap(subcommand)]
     command: Commands,
 }
 
 #[derive(Debug, Subcommand)]
 enum Commands {
-    Get { path: String },
-    Put { path: String },
+    Get {
+        path: String,
+    },
+    Put {
+        path: String,
+
+        #[clap(short = 'f', long)]
+        file: Option<String>,
+    },
 }
 
 #[tokio::main]
@@ -167,10 +228,10 @@ async fn main() {
                 println!("Invalid path");
             }
         },
-        Commands::Put { path } => match path.as_str() {
+        Commands::Put { path, file } => match path.as_str() {
             "/admin/works" => {
                 let json_data = utils::get_local_json_data("assets/data/works.json");
-                let data = put_data(path, &json_data).await;
+                let data = put_json_data(path, &json_data).await;
 
                 println!("-------------------------");
                 println!("message: {:?}", data.message);
@@ -178,11 +239,29 @@ async fn main() {
             }
             "/admin/work-history" => {
                 let json_data = utils::get_local_json_data("assets/data/work_history.json");
-                let data = put_data(path, &json_data).await;
+                let data = put_json_data(path, &json_data).await;
 
                 println!("-------------------------");
                 println!("message: {:?}", data.message);
                 println!("path: {:?}", data.path);
+            }
+            "/admin/images/favorites" => {
+                let filepath = file.expect("file is required");
+                let filename = filepath.split('/').last().unwrap().to_string();
+                let file_data = fs::read(filepath).expect("Unable to read file");
+
+                let data = put_file_data(
+                    path,
+                    FileData {
+                        name: filename,
+                        content: file_data,
+                    },
+                )
+                .await;
+
+                println!("-------------------------");
+                println!("uploaded: {:?}", data.uploaded);
+                println!("key: {:?}", data.key);
             }
             _ => {
                 println!("Invalid path");
