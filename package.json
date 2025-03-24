@@ -5,8 +5,8 @@
 		"dev": "wrangler dev",
 		"deploy": "wrangler deploy --minify",
 		"lint": "bunx biome lint --write --unsafe ./src",
-		"format": "bunx biome format --write ./src ./assets package.json tsconfig.json biome.json",
-		"check": "bunx biome ci --formatter-enabled=true --linter-enabled=true --organize-imports-enabled=false ./src ./assets package.json tsconfig.json biome.json"
+		"format": "bunx biome format --write ./src package.json tsconfig.json biome.json",
+		"check": "bunx biome ci --formatter-enabled=true --linter-enabled=true --organize-imports-enabled=false ./src package.json tsconfig.json biome.json"
 	},
 	"dependencies": {
 		"hono": "^4.7.4"
