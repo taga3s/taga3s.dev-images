@@ -27,7 +27,7 @@ struct Works {
 
 #[derive(Debug, Serialize, Deserialize)]
 struct FavPhoto {
-    uri: String,
+    url: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

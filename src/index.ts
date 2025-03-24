@@ -73,7 +73,7 @@ v1.get("/photos/favs", async (c) => {
 		prefix: "images/favorites/",
 	});
 	const images = data.objects.map((object) => ({
-		uri: `${PROD_SERVICE_URL}/api/v1/${object.key}`,
+		url: `${PROD_SERVICE_URL}/api/v1/${object.key}`,
 	}));
 	return c.json({ images });
 });
