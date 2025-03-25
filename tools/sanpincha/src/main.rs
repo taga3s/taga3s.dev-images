@@ -225,7 +225,7 @@ async fn main() {
                 let data = get_data::<FavPhotos>(path).await;
                 for photo in data.images {
                     println!("-------------------------");
-                    println!("uri: {:?}", photo.uri);
+                    println!("url: {:?}", photo.url);
                 }
             }
             _ => {
