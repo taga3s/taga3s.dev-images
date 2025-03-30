@@ -45,7 +45,20 @@ v1.get("/work-history", async (c) => {
 
 	const headers = new Headers();
 	headers.set("Content-Type", "application/json");
-	headers.set("etag", object.etag);
+
+	return new Response(object.body, {
+		headers,
+	});
+});
+
+v1.get("/certifications", async (c) => {
+	const object = await c.env.r2_taga3s_dev_assets.get("json/certifications");
+	if (!object) {
+		return c.json({ certifications: [] });
+	}
+
+	const headers = new Headers();
+	headers.set("Content-Type", "application/json");
 
 	return new Response(object.body, {
 		headers,
@@ -113,6 +126,15 @@ v1.put("/admin/work-history", async (c) => {
 		JSON.stringify({ work_history }),
 	);
 	return c.json({ message: "Work history updated", path: object?.key });
+});
+
+v1.put("/admin/certifications", async (c) => {
+	const { certifications } = await c.req.json();
+	const object = await c.env.r2_taga3s_dev_assets.put(
+		"json/certifications",
+		JSON.stringify({ certifications }),
+	);
+	return c.json({ message: "Certifications updated", path: object?.key });
 });
 
 v1.put("/admin/works", async (c) => {
