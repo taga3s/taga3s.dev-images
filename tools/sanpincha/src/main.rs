@@ -51,6 +51,18 @@ struct WorkHistory {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+struct Certification {
+    name: String,
+    when: String,
+    url: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct Certifications {
+    certifications: Vec<Certification>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 struct PutJsonDataResponse {
     message: String,
     path: String,
@@ -176,9 +188,7 @@ struct Cli {
 #[derive(Debug, Subcommand)]
 enum Commands {
     /// Equivalent to GET request
-    Get {
-        path: String,
-    },
+    Get { path: String },
     /// Equivalent to PUT request
     Put {
         path: String,
@@ -221,6 +231,15 @@ async fn main() {
                     println!("order: {:?}", wh.order);
                 }
             }
+            "/certifications" => {
+                let data = get_data::<Certifications>(path).await;
+                for cert in data.certifications {
+                    println!("-------------------------");
+                    println!("title: {:?}", cert.name);
+                    println!("when: {:?}", cert.when);
+                    println!("url: {:?}", cert.url);
+                }
+            }
             "/photos/favs" => {
                 let data = get_data::<FavPhotos>(path).await;
                 for photo in data.images {
@@ -243,6 +262,14 @@ async fn main() {
             }
             "/admin/work-history" => {
                 let json_data = utils::get_local_json_data("assets/data/work_history.json");
+                let data = put_json_data(path, &json_data).await;
+
+                println!("-------------------------");
+                println!("message: {:?}", data.message);
+                println!("path: {:?}", data.path);
+            }
+            "/admin/certifications" => {
+                let json_data = utils::get_local_json_data("assets/data/certifications.json");
                 let data = put_json_data(path, &json_data).await;
 
                 println!("-------------------------");
