@@ -11,21 +11,6 @@ use reqwest::{
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
-struct Work {
-    id: String,
-    title: String,
-    description: String,
-    tech_stack: String,
-    github_url: String,
-    order: i32,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-struct Works {
-    works: Vec<Work>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
 struct FavPhoto {
     url: String,
 }
@@ -206,19 +191,6 @@ async fn main() {
 
     match cli.command {
         Commands::Get { path } => match path.as_str() {
-            "/works" => {
-                let data = get_data::<Works>(path).await;
-
-                for work in data.works {
-                    println!("-------------------------");
-                    println!("id: {:?}", work.id);
-                    println!("title: {:?}", work.title);
-                    println!("description: {:?}", work.description);
-                    println!("tech_stack: {:?}", work.tech_stack);
-                    println!("github_url: {:?}", work.github_url);
-                    println!("order: {:?}", work.order);
-                }
-            }
             "/work-history" => {
                 let data = get_data::<WorkHistory>(path).await;
                 for wh in data.work_history {
@@ -252,14 +224,6 @@ async fn main() {
             }
         },
         Commands::Put { path, file } => match path.as_str() {
-            "/admin/works" => {
-                let json_data = utils::get_local_json_data("assets/data/works.json");
-                let data = put_json_data(path, &json_data).await;
-
-                println!("-------------------------");
-                println!("message: {:?}", data.message);
-                println!("path: {:?}", data.path);
-            }
             "/admin/work-history" => {
                 let json_data = utils::get_local_json_data("assets/data/work_history.json");
                 let data = put_json_data(path, &json_data).await;

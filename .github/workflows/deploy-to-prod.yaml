@@ -29,10 +29,3 @@ jobs:
           BASIC_AUTH_USERNAME: ${{ secrets.BASIC_AUTH_USERNAME }}
           BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD }}
           PROD_SERVICE_URL: ${{ secrets.PROD_SERVICE_URL }}
-
-      # - name: Comment Preview URL
-      #   uses: ./.github/actions/comment-preview-url
-      #   with:
-      #     target_url: ${{ steps.cloudflare-pages-deploy.outputs.deployment-url }}
-      #     pr_number: ${{ github.event.number }}
-      #   if: github.event_name == 'pull_request'
