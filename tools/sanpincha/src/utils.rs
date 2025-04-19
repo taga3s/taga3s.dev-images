@@ -20,7 +20,7 @@ pub fn get_config() -> Config {
     }
 }
 
-pub fn get_local_json_data(path: &str) -> serde_json::Map<String, serde_json::Value> {
+pub fn _get_local_json_data(path: &str) -> serde_json::Map<String, serde_json::Value> {
     let file = File::open(path).unwrap();
     let reader = BufReader::new(file);
     let json_data: serde_json::Value = serde_json::from_reader(reader).unwrap();

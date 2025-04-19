@@ -11,49 +11,12 @@ use reqwest::{
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
-struct FavPhoto {
-    url: String,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-struct FavPhotos {
-    images: Vec<FavPhoto>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-struct WorkHistoryItem {
-    id: String,
-    span: String,
-    company: String,
-    description: String,
-    tech_stack: String,
-    order: i32,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-struct WorkHistory {
-    work_history: Vec<WorkHistoryItem>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-struct Certification {
-    name: String,
-    when: String,
-    url: String,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-struct Certifications {
-    certifications: Vec<Certification>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
 struct PutJsonDataResponse {
     message: String,
     path: String,
 }
 
-async fn get_data<T: for<'de> Deserialize<'de>>(path: String) -> T {
+async fn _get_data<T: for<'de> Deserialize<'de>>(path: String) -> T {
     let config = utils::get_config();
 
     let request_url = format!("{}{}", config.base_url, path);
@@ -79,7 +42,7 @@ async fn get_data<T: for<'de> Deserialize<'de>>(path: String) -> T {
     res_data
 }
 
-async fn put_json_data<T: Serialize>(path: String, req_body: &T) -> PutJsonDataResponse {
+async fn _put_json_data<T: Serialize>(path: String, req_body: &T) -> PutJsonDataResponse {
     let config = utils::get_config();
 
     let request_url = format!("{}{}", config.base_url, path);
@@ -172,8 +135,6 @@ struct Cli {
 
 #[derive(Debug, Subcommand)]
 enum Commands {
-    /// Equivalent to GET request
-    Get { path: String },
     /// Equivalent to PUT request
     Put {
         path: String,
@@ -190,56 +151,7 @@ async fn main() {
     let cli = Cli::parse();
 
     match cli.command {
-        Commands::Get { path } => match path.as_str() {
-            "/work-history" => {
-                let data = get_data::<WorkHistory>(path).await;
-                for wh in data.work_history {
-                    println!("-------------------------");
-                    println!("id: {:?}", wh.id);
-                    println!("span: {:?}", wh.span);
-                    println!("company: {:?}", wh.company);
-                    println!("description: {:?}", wh.description);
-                    println!("tech_stack: {:?}", wh.tech_stack);
-                    println!("order: {:?}", wh.order);
-                }
-            }
-            "/certifications" => {
-                let data = get_data::<Certifications>(path).await;
-                for cert in data.certifications {
-                    println!("-------------------------");
-                    println!("title: {:?}", cert.name);
-                    println!("when: {:?}", cert.when);
-                    println!("url: {:?}", cert.url);
-                }
-            }
-            "/photos/favs" => {
-                let data = get_data::<FavPhotos>(path).await;
-                for photo in data.images {
-                    println!("-------------------------");
-                    println!("url: {:?}", photo.url);
-                }
-            }
-            _ => {
-                println!("Invalid path");
-            }
-        },
         Commands::Put { path, file } => match path.as_str() {
-            "/admin/work-history" => {
-                let json_data = utils::get_local_json_data("assets/data/work_history.json");
-                let data = put_json_data(path, &json_data).await;
-
-                println!("-------------------------");
-                println!("message: {:?}", data.message);
-                println!("path: {:?}", data.path);
-            }
-            "/admin/certifications" => {
-                let json_data = utils::get_local_json_data("assets/data/certifications.json");
-                let data = put_json_data(path, &json_data).await;
-
-                println!("-------------------------");
-                println!("message: {:?}", data.message);
-                println!("path: {:?}", data.path);
-            }
             "/admin/images/favorites" => {
                 let filepath = file.expect("file is required");
                 let filename = filepath.split('/').last().unwrap().to_string();
