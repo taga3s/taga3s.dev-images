@@ -54,9 +54,21 @@ v1.get("/images/og/:title", async (c) => {
 		return c.notFound();
 	}
 
-	// TODO: Check if the image is already generated and stored in R2
+	const object = await c.env.taga3s_dev_images.get(`images/og/${title}`);
+	if (object) {
+		const body = await object.arrayBuffer();
+		return c.body(body, 200, {
+			"Content-Type": object.httpMetadata?.contentType ?? "image/png",
+		});
+	}
 
 	const buffer = await generateOGImage(title);
+	await c.env.taga3s_dev_images.put(`images/og/${title}`, buffer, {
+		httpMetadata: {
+			contentType: "image/png",
+		},
+	});
+
 	return c.body(buffer, 200, {
 		"Content-Type": "image/png",
 	});
