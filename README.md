@@ -1,5 +1,5 @@
 # taga3s-dev-images
-An Image Worker on cloudflare for https://taga3s.dev.
+An image worker on cloudflare for https://taga3s.dev.
 
 ## Features
 - Deliver images
