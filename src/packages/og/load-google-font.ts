@@ -45,12 +45,9 @@ export const loadGoogleFont = async ({
 	const fontUrl = body.match(
 		/src: url\((.+)\) format\('(opentype|truetype)'\)/,
 	)?.[1];
-
 	if (!fontUrl) {
 		throw new Error("Could not find font URL");
 	}
-
-	console.log("Font URL:", fontUrl);
 
 	return fetch(fontUrl).then((res) => res.arrayBuffer());
 };

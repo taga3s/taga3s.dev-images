@@ -21,7 +21,7 @@ export const ImageBase: FC<Props> = ({ title }) => {
 			<div
 				style={{
 					color: "#000000",
-					fontSize: 64,
+					fontSize: 56,
 					maxWidth: 1000,
 					marginTop: 24,
 				}}
