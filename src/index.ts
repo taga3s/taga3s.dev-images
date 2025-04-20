@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { env } from "hono/adapter";
 import { basicAuth } from "hono/basic-auth";
+import { generateOGImage } from "./packages/og/generate";
 
 type Bindings = {
 	taga3s_dev_images: R2Bucket;
@@ -44,6 +45,20 @@ v1.get("/images/favorites/:key", async (c) => {
 	const body = await object.arrayBuffer();
 	return c.body(body, 200, {
 		"Content-Type": object.httpMetadata?.contentType ?? "image/jpeg",
+	});
+});
+
+v1.get("/images/og/:title", async (c) => {
+	const title = c.req.param("title");
+	if (!title) {
+		return c.notFound();
+	}
+
+	// TODO: Check if the image is already generated and stored in R2
+
+	const buffer = await generateOGImage(title);
+	return c.body(buffer, 200, {
+		"Content-Type": "image/png",
 	});
 });
 

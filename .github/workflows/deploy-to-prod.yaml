@@ -1,7 +1,13 @@
-name: Deploy to Production
+name: deploy
 
 on:
   push:
+    branches:
+      - main
+    paths-ignore:
+      - tools/**
+      - README.md
+  pull_request:
     branches:
       - main
     paths-ignore:
@@ -18,13 +24,14 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       
       - run: bun install
+      - run: bun fetch-assets
       
       - name: Publish to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
         with:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          command: deploy --minify
+          command: deploy --minify --config wrangler.jsonc
         env:
           BASIC_AUTH_USERNAME: ${{ secrets.BASIC_AUTH_USERNAME }}
           BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD }}
