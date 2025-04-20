@@ -8,8 +8,8 @@
   ],
   "r2_buckets": [
     {
-      "bucket_name": "r2-taga3s-dev-assets",
-      "binding": "r2_taga3s_dev_assets"
+      "bucket_name": "taga3s-dev-images",
+      "binding": "taga3s_dev_images"
     }
   ]
 }

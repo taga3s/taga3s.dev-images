@@ -3,7 +3,7 @@ import { env } from "hono/adapter";
 import { basicAuth } from "hono/basic-auth";
 
 type Bindings = {
-	r2_taga3s_dev_assets: R2Bucket;
+	taga3s_dev_images: R2Bucket;
 };
 
 const v1 = new Hono<{ Bindings: Bindings }>();
@@ -34,7 +34,7 @@ v1.get("/images/*", async (c, next) => {
 });
 
 v1.get("/images/favorites/:key", async (c) => {
-	const object = await c.env.r2_taga3s_dev_assets.get(
+	const object = await c.env.taga3s_dev_images.get(
 		`images/favorites/${c.req.param("key")}`,
 	);
 	if (!object) {
@@ -63,7 +63,7 @@ v1.use("/admin/*", async (c, next) => {
 
 v1.put("/admin/images/favorites", async (c) => {
 	const { file, name } = await c.req.parseBody<{ file: File; name: string }>();
-	const result = await c.env.r2_taga3s_dev_assets.put(
+	const result = await c.env.taga3s_dev_images.put(
 		`images/favorites/${name}`,
 		file,
 		{
