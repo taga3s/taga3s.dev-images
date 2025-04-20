@@ -1,5 +1,5 @@
 {
-	"name": "taga3s-dev-assets",
+	"name": "taga3s-dev-images",
 	"type": "module",
 	"scripts": {
 		"dev": "wrangler dev",

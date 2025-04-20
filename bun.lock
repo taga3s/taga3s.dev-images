@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "taga3s-dev-assets",
+      "name": "taga3s-dev-images",
       "dependencies": {
         "hono": "^4.7.4",
       },

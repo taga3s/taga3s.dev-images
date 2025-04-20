@@ -1,15 +1,15 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "taga3s-dev-assets",
+  "name": "taga3s-dev-images",
   "main": "src/index.ts",
   "compatibility_date": "2025-02-24",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "r2_buckets": [
     {
       "bucket_name": "r2-taga3s-dev-assets",
       "binding": "r2_taga3s_dev_assets"
     }
   ]
-  // "compatibility_flags": [
-  //   "nodejs_compat"
-  // ],
 }
