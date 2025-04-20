@@ -28,4 +28,3 @@ jobs:
         env:
           BASIC_AUTH_USERNAME: ${{ secrets.BASIC_AUTH_USERNAME }}
           BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD }}
-          PROD_SERVICE_URL: ${{ secrets.PROD_SERVICE_URL }}
