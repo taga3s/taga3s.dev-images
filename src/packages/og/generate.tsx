@@ -32,7 +32,7 @@ export const generateOGImage = async (
 	});
 
 	const svg = await satori(<ImageBase title={title} />, {
-		width: 1121,
+		width: 1200,
 		height: 630,
 		fonts: [
 			{
