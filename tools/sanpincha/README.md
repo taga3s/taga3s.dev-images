@@ -1,6 +1,6 @@
 # sanpincha
 
-`sanpincha` is a content management cli tool for https://taga3s-dev-assets.taga3s.workers.dev
+`sanpincha` is a content management cli tool for https://taga3s-dev-images.taga3s.workers.dev
 
 ## commands
 
