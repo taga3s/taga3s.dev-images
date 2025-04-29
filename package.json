@@ -10,17 +10,17 @@
 		"check": "bunx biome ci --formatter-enabled=true --linter-enabled=true --organize-imports-enabled=false ./src package.json tsconfig.json biome.json"
 	},
 	"dependencies": {
-		"hono": "^4.7.4"
+		"hono": "^4.7.8"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
-		"@cloudflare/workers-types": "^4.20250313.0",
+		"@cloudflare/workers-types": "^4.20250429.0",
 		"@resvg/resvg-js": "^2.6.2",
 		"@resvg/resvg-wasm": "^2.6.2",
-		"@types/node": "^22.14.1",
+		"@types/node": "^22.15.3",
 		"satori": "^0.12.2",
 		"sharp": "^0.34.1",
-		"wrangler": "^4.0.0",
+		"wrangler": "^4.13.2",
 		"yoga-wasm-web": "^0.3.3"
 	}
 }
